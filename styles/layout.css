@@ -61,3 +61,31 @@ body {
 .sm .answer-last {
     font-size: 1.2rem;
 }
+
+.result {
+    margin: 1rem auto 1rem auto;
+    text-align: center;
+}
+.result-head {
+    background-color: #e0e0e0;
+    padding: 1rem;
+}
+.result-head .resres {
+    font-size: 2rem;
+}
+.result-head .resres .correct, .restable .result-true {
+    color: green;
+}
+.result-head .resres .wrong, .restable .result-false {
+    color: red;
+}
+.result-head .resres .final {
+    font-size: 1.6em;
+}
+.restable {
+    margin: 0;
+    padding: 1rem;
+    width: 100%;
+    text-align: center;
+    border: hidden;
+}

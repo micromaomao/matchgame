@@ -49,7 +49,10 @@ var Game = function(table, mode) {
         if(table.hasOwnProperty(i))
             pts.push({name: i, value: table[i]});
     }
-    this.order_input(pts, name_order_RANDOM);
+    var th = this;
+    this.order_input(pts, name_order_RANDOM, function() {
+        Game.prototype.showResults.apply(th, arguments);
+    });
 };
 Game.prototype.order_input = function(arr, order, callback) {
     arr.sort(order);
@@ -67,23 +70,50 @@ Game.prototype.order_input = function(arr, order, callback) {
             return;
         }
         th.input(arr[i].name, function(ans){
+            var cor;
             if(ans == arr[i].value) {
-                results.push(true);
+                cor = true;
                 corrnum ++;
                 sm.find('.answer-last').text("You got the last one correct.");
                 sm.find('.answer-last-ctn').text("You inputed \"" + ans + "\", and the correct answer is this.");
             } else {
-                results.push(false);
+                cor = false;
                 sm.find('.answer-last').text("You got the last one wrong.");
                 sm.find('.answer-last-ctn').text("You inputed \"" + ans + "\", however the correct answer is \"" + arr[i].value + '".');
             }
+            results.push({
+                name: arr[i].name, corr: arr[i].value,
+                user: ans, iscorr: cor
+            });
             sm.find('.answer-count').text(i+1);
             sm.find('.answer-correct-num').text(corrnum);
             ds(i+1);
         });
     };
     ds(0);
-}
+};
+Game.prototype.showResults = function(corrnum, results) {
+    var resele = $('<div class="result"></div>');
+    this.element.append(resele);
+    var reshead = $('<div class="result-head">Here is your result:</div>');
+    resele.append(reshead);
+    var resres = $('<div class="resres">You got <span class="correct">0</span> correct, ' +
+                   '<span class="wrong">0</span> wrong. You got a final score: <div class="final">NaN</div></div>');
+    resres.find('.correct').text(corrnum);
+    resres.find('.wrong').text(results.length - corrnum);
+    resres.find('.final').text(Math.floor((corrnum / results.length) * 100) + "%");
+    var rlr = $('<table border="0" class="restable"><tbody></tbody></table>');
+    var rlist = rlr.find('tbody');
+    reshead.append(resres);
+    resele.append(rlr);
+    rlist.append('<tr><td>Name</td><td>Correct Answer</td><td>Your input</td><td>If correct</td></tr>');
+    for(var i = 0; i < results.length; i ++) {
+        var r = results[i];
+        rlist.append('<tr><td>' + r.name + '</td><td>' + r.corr
+                     + '</td><td>' + r.user + '</td><td class="result-' + r.iscorr.toString() +'">'+
+                         (r.iscorr?"yes":"no")+'</td></tr>');
+    }
+};
 Game.prototype.input = function(name, callback) {
     var mpm = $('<div class="answer-input-wrapper"></div>');
     this.element.append(mpm);
