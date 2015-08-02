@@ -89,3 +89,11 @@ body {
     text-align: center;
     border: hidden;
 }
+.opinion {
+    display: inline-block;
+    margin: 1.2rem;
+    padding: 0.8rem;
+    border: solid 2px #555;
+    background-color: #f3f3f3;
+    font-size: 0.8em;
+}

@@ -7,7 +7,7 @@ var name_order_ASC = function(a, b) {
 var name_order_DESC = function(a, b) {
     return -name_order_ASC(a, b);
 };
-var name_order_RANDOM = function(a, b) {
+var order_RANDOM = function(a, b) {
     return Math.random()-0.5;
 };
 /** (Constructor) Game(table:object, mode:object)
@@ -50,11 +50,11 @@ var Game = function(table, mode) {
             pts.push({name: i, value: table[i]});
     }
     var th = this;
-    this.order_input(pts, name_order_RANDOM, function() {
+    this.run(pts, order_RANDOM, function() {
         Game.prototype.showResults.apply(th, arguments);
-    });
+    }, 4);
 };
-Game.prototype.order_input = function(arr, order, callback) {
+Game.prototype.run = function(arr, order, callback, opinum) {
     arr.sort(order);
     var th = this;
     var corrnum = 0;
@@ -88,7 +88,22 @@ Game.prototype.order_input = function(arr, order, callback) {
             sm.find('.answer-count').text(i+1);
             sm.find('.answer-correct-num').text(corrnum);
             ds(i+1);
-        });
+        }, opinum?(function(){
+            var dsa = [];
+            for(var j = 0; j < arr.length; j ++) {
+                if(i == j) {
+                    continue;
+                }
+                dsa.push(j);
+            }
+            dsa.sort(order_RANDOM);
+            var pa = [];
+            for(var s = 0; s < opinum; s ++) {
+                if(s >= dsa.length) break;
+                pa.push(arr[dsa[s]].value);
+            }
+            return pa;
+        })():null);
     };
     ds(0);
 };
@@ -114,7 +129,7 @@ Game.prototype.showResults = function(corrnum, results) {
                          (r.iscorr?"yes":"no")+'</td></tr>');
     }
 };
-Game.prototype.input = function(name, callback) {
+Game.prototype.input = function(name, callback, opinions) {
     var mpm = $('<div class="answer-input-wrapper"></div>');
     this.element.append(mpm);
     var nm = $('<div class="answer-input-name"></div>');
@@ -122,23 +137,42 @@ Game.prototype.input = function(name, callback) {
     var ipt = $('<input type="text" placeholder="answer" class="answer-input">');
     var btnok = $('<button class="answer-input-btnok">Check</buttom>');
     mpm.append(nm);
-    mpm.append('<div class="howto">Input your answer below, or leave blank if you don\'t know. ' +
-               'On finish, press Enter or tap the "Check" buttom. </div>');
-    mpm.append(ipt);
-    mpm.append($('<div class="answer-input-btnok-wrapper"></div>').append(btnok));
+    if(!opinions) {
+        mpm.append('<div class="howto">Input your answer below, or leave blank if you don\'t know. ' +
+                   'On finish, press Enter or tap the "Check" buttom. </div>');
+        mpm.append(ipt);
+    } else {
+        mpm.append('<div class="howto">Select the correct answer or if you don\'t know, click next</div>');
+    }
     var onok = function(){
         callback(ipt.val());
         mpm.remove();
     };
-    btnok.on('click tap', onok);
-    ipt.on('keydown', function(evt){
-        if(evt.keyCode == 13) {
-            onok();
+    if(!opinions) {
+        mpm.append($('<div class="answer-input-btnok-wrapper"></div>').append(btnok));
+        btnok.on('click tap', onok);
+        ipt.on('keydown', function(evt){
+            if(evt.keyCode == 13) {
+                onok();
+            }
+        });
+        setTimeout(function(){
+            ipt[0].focus();
+        }, 20);
+    } else {
+        opinions.push(null);
+        for(var i = 0; i < opinions.length; i ++) {
+            !function(i) {
+                var sel = $('<button class="opinion"></button>');
+                sel.text(opinions[i] || "Next");
+                mpm.append(sel);
+                sel.on('tap click', function() {
+                    ipt.val(opinions[i]);
+                    onok();
+                });
+            }(i);
         }
-    });
-    setTimeout(function(){
-        ipt[0].focus();
-    }, 20);
+    }
 };
 Game.prototype.appendTo = function(element) {
     (element.append?element.append(this.element):element.appendChild(this.element[0]));
