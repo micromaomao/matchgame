@@ -142,9 +142,11 @@ Game.prototype.input = function(name, callback, opinions) {
                    'On finish, press Enter or tap the "Check" buttom. </div>');
         mpm.append(ipt);
     } else {
-        mpm.append('<div class="howto">Select the correct answer or if you don\'t know, click next</div>');
+        mpm.append('<div class="howto">Select the correct answer or if you don\'t know, click next.'+
+                   ' Press 1-9 on keyboard to quick select.</div>');
     }
     var onok = function(){
+        $(document).off('keydown');
         callback(ipt.val());
         mpm.remove();
     };
@@ -165,6 +167,7 @@ Game.prototype.input = function(name, callback, opinions) {
             !function(i) {
                 var sel = $('<button class="opinion"></button>');
                 sel.text(opinions[i] || "Next");
+                sel.prepend($('<span class="num"></span>').text(i+1));
                 mpm.append(sel);
                 sel.on('tap click', function() {
                     ipt.val(opinions[i]);
@@ -172,6 +175,13 @@ Game.prototype.input = function(name, callback, opinions) {
                 });
             }(i);
         }
+        $(document).on('keydown', function(evt) {
+            var num = evt.keyCode - 48;
+            if(num >= 1 && num <= opinions.length) {
+                ipt.val(opinions[num-1]);
+                onok();
+            }
+        });
     }
 };
 Game.prototype.appendTo = function(element) {
