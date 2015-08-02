@@ -44,12 +44,29 @@ var Game = function(table, mode) {
 
     this.mode = mode;
     var pts = [];
+    var prb, uts;
+    uts = mode.way.match(/^R([0-9]{1,2})%([VN])$/);
+    if(uts) {
+        if(uts[2] == "N") {
+            prb = 1 - (parseInt(uts[1])/100);
+        } else {
+            prb = parseInt(uts[1])/100;
+        }
+    } else {
+        prb = 0.5;
+    }
     for(var i in table) {
         if(table.hasOwnProperty(i)) {
             if(mode.way == "V-N") {
                 pts.push({name: table[i], value: i});
-            } else {
+            } else if (mode.way == "N-V") {
                 pts.push({name: i, value: table[i]});
+            } else {
+                if(Math.random() < prb) {
+                    pts.push({name: i, value: table[i]});
+                } else {
+                    pts.push({name: table[i], value: i});
+                }
             }
         }
     }
@@ -234,7 +251,7 @@ $(document).ready(function(){
     }, {
         answer: "choose",
         selectlength: 10,
-        way: "V-N"
+        way: "R70%V"
     });
     testgame.appendTo($('body'));
 });
