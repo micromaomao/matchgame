@@ -32,8 +32,48 @@ var Game = function(table, mode) {
 
     // TODO: Read mode object.
     this.mode = mode;
-    this.input("test");
+    var pts = [];
+    for(var i in table) {
+        if(table.hasOwnProperty(i))
+            pts.push({name: i, value: table[i]});
+    }
+    this.order_ASC_input(pts);
 };
+Game.prototype.order_ASC_input = function(arr, callback) {
+    arr.sort(function(a, b) {
+        var pr = [a.name, b.name];
+        pr.sort();
+        // assert(pr[0] != pr[1])
+        return (pr[0] == a.name?-1:1);
+    });
+    var th = this;
+    var corrnum = 0;
+    var results = [];
+    var sm = $('<div class="sm">You have answered <span class="answer-count">0</span>' +
+               ' problem, you got <span class="answer-correct-num">0</span> correct. <span class="answer-last"></span></div>');
+    this.element.append(sm);
+    var ds = function(i) {
+        if(i >= arr.length) {
+            sm.remove();
+            callback && callback(corrnum, results);
+            return;
+        }
+        th.input(arr[i].name, function(ans){
+            if(ans == arr[i].value) {
+                results.push(true);
+                corrnum ++;
+                sm.find('.answer-last').text("You got the last one correct.");
+            } else {
+                results.push(false);
+                sm.find('.answer-last').text("You got the last one wrong.");
+            }
+            sm.find('.answer-count').text(i+1);
+            sm.find('.answer-correct-num').text(corrnum);
+            ds(i+1);
+        });
+    };
+    ds(0);
+}
 Game.prototype.input = function(name, callback) {
     var mpm = $('<div class="answer-input-wrapper"></div>');
     this.element.append(mpm);

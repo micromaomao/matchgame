@@ -49,3 +49,12 @@ body {
 .answer-input-btnok-wrapper {
     margin: 1rem;
 }
+.sm {
+    font-size: 0.7rem;
+    color: #111111;
+    text-align: center;
+    margin: 1rem;
+}
+.sm .answer-count, .sm .answer-correct-num {
+    color: red;
+}
