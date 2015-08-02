@@ -1,12 +1,3 @@
-var name_order_ASC = function(a, b) {
-    var pr = [a.name, b.name];
-    pr.sort();
-    // assert(pr[0] != pr[1])
-    return (pr[0] == a.name?-1:1);
-};
-var name_order_DESC = function(a, b) {
-    return -name_order_ASC(a, b);
-};
 // Code from
 // http://bost.ocks.org/mike/shuffle/
 function shuffle(array) {
@@ -51,18 +42,39 @@ var Game = function(table, mode) {
     this.table = table;
     this.element = $('<div class="matchgame-wrapper"></div>');
 
-    // TODO: Read mode object.
     this.mode = mode;
     var pts = [];
     for(var i in table) {
-        if(table.hasOwnProperty(i))
-            pts.push({name: i, value: table[i]});
+        if(table.hasOwnProperty(i)) {
+            if(mode.way == "V-N") {
+                pts.push({name: table[i], value: i});
+            } else {
+                pts.push({name: i, value: table[i]});
+            }
+        }
     }
     var th = this;
-    shuffle(pts);
-    this.run(pts, function() {
+    switch(mode.order) {
+        case "ASC":
+            pts.sort(function(a, b) {
+                var pr = [a.name, b.name];
+                pr.sort();
+                // assert(pr[0] != pr[1])
+                return (pr[0] == a.name?-1:1);
+            });
+            break;
+        case "DESC":
+            pts.sort(function(a, b) {
+                return -name_order_ASC(a, b);
+            });
+            break;
+        case "RANDOM":
+        default:
+            shuffle(pts);
+    }
+    this.run(pts, function(){
         Game.prototype.showResults.apply(th, arguments);
-    }, 4);
+    }, (mode.answer=="choose"?(mode.selectlength||4):null));
 };
 Game.prototype.run = function(arr, callback, opinum) {
     var th = this;
@@ -219,6 +231,10 @@ $(document).ready(function(){
         "す": "su",
         "せ": "se",
         "そ": "so"
+    }, {
+        answer: "choose",
+        selectlength: 10,
+        way: "V-N"
     });
     testgame.appendTo($('body'));
 });
