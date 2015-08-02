@@ -98,10 +98,12 @@ Game.prototype.run = function(arr, order, callback, opinum) {
             }
             dsa.sort(order_RANDOM);
             var pa = [];
-            for(var s = 0; s < opinum; s ++) {
+            for(var s = 0; s < opinum-1; s ++) {
                 if(s >= dsa.length) break;
                 pa.push(arr[dsa[s]].value);
             }
+            pa.push(arr[i].value);
+            pa.sort(order_RANDOM);
             return pa;
         })():null);
     };
