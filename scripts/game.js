@@ -7,8 +7,17 @@ var name_order_ASC = function(a, b) {
 var name_order_DESC = function(a, b) {
     return -name_order_ASC(a, b);
 };
-var order_RANDOM = function(a, b) {
-    return Math.random()-0.5;
+// Code from
+// http://bost.ocks.org/mike/shuffle/
+function shuffle(array) {
+  var m = array.length, t, i;
+  while (m) {
+    i = Math.floor(Math.random() * m--);
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+  }
+  return array;
 };
 /** (Constructor) Game(table:object, mode:object)
  *
@@ -50,12 +59,12 @@ var Game = function(table, mode) {
             pts.push({name: i, value: table[i]});
     }
     var th = this;
-    this.run(pts, order_RANDOM, function() {
+    shuffle(pts);
+    this.run(pts, function() {
         Game.prototype.showResults.apply(th, arguments);
     }, 4);
 };
-Game.prototype.run = function(arr, order, callback, opinum) {
-    arr.sort(order);
+Game.prototype.run = function(arr, callback, opinum) {
     var th = this;
     var corrnum = 0;
     var results = [];
@@ -96,14 +105,14 @@ Game.prototype.run = function(arr, order, callback, opinum) {
                 }
                 dsa.push(j);
             }
-            dsa.sort(order_RANDOM);
+            shuffle(dsa);
             var pa = [];
             for(var s = 0; s < opinum-1; s ++) {
                 if(s >= dsa.length) break;
                 pa.push(arr[dsa[s]].value);
             }
             pa.push(arr[i].value);
-            pa.sort(order_RANDOM);
+            shuffle(pa);
             return pa;
         })():null);
     };
