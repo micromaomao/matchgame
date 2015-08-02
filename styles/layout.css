@@ -102,3 +102,8 @@ body {
     color: #aaa;
     margin-right: 0.2rem;
 }
+
+.CodeMirror {
+    border: 1px solid #eee;
+    height: auto;
+}
