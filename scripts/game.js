@@ -211,29 +211,37 @@ Game.prototype.input = function(name, callback, opinions) {
 Game.prototype.appendTo = function(element) {
     (element.append?element.append(this.element):element.appendChild(this.element[0]));
 };
-// 
 $(document).ready(function(){
-    document.title = "MatchGame Preview";
-    var testgame = new Game({
-        "あ": "a",
-        "い": "i",
-        "う": "u",
-        "え": "e",
-        "お": "o",
-        "か": "ka",
-        "き": "ki",
-        "く": "ku",
-        "け": "ke",
-        "こ": "ko",
-        "さ": "sa",
-        "し": "shi",
-        "す": "su",
-        "せ": "se",
-        "そ": "so"
-    }, {
-        answer: "choose",
-        selectlength: 10,
-        way: "V-N"
+    document.title = "MatchGame Configure";
+    var ce = CodeMirror(document.body, {
+        lineNumbers: false,
+        autofocus: true,
+        mode: "javascript",
+        matchBrackets: true
     });
-    testgame.appendTo($('body'));
+    ce.setValue(localStorage.code || "!" + (function(){
+        var g = new Game({
+            "あ": "a",
+            "い": "i",
+            "う": "u",
+            "え": "e",
+            "お": "o",
+            "か": "ka",
+            "き": "ki",
+            "く": "ku",
+            "け": "ke",
+            "こ": "ko",
+            "さ": "sa",
+            "し": "shi",
+            "す": "su",
+            "せ": "se",
+            "そ": "so"
+        }, {});
+        $('body').html('');
+        g.appendTo($('body'));
+    }).toString() + "();");
+    $('body').append($('<button class="answer-input-btnok">Start</button>').on('tap click', function(){
+        localStorage.code = ce.getValue();
+        eval(localStorage.code);
+    }));
 });
