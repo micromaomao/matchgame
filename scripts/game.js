@@ -32,8 +32,7 @@ function shuffle(array) {
  *  * `selectlength`: When `"choose"` given to `answer`, this is the number of different
  *  answer showen. **Must be greater than 0**.
  *  * `way`: One of `"N-V"` - means name are given and player needs to answer the value,
- *  `"V-N"` is the reverse, and `"R"` means random, `"R80%V"` or `"R20%N"` means
- *  it has 80% chance to let user answer value.
+ *  `"V-N"` is the reverse.
  *  * `order`: `"ASC"` `"DESC"` or `"RANDOM"` ( default ).
  *  `}`
  */
