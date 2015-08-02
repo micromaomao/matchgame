@@ -178,7 +178,9 @@ Game.prototype.input = function(name, callback, opinions) {
             !function(i) {
                 var sel = $('<button class="opinion"></button>');
                 sel.text(opinions[i] || "Next");
-                sel.prepend($('<span class="num"></span>').text(i+1));
+                if(i <= 8) {
+                    sel.prepend($('<span class="num"></span>').text(i+1));
+                }
                 mpm.append(sel);
                 sel.on('tap click', function() {
                     ipt.val(opinions[i]);
