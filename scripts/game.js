@@ -1,3 +1,15 @@
+var name_order_ASC = function(a, b) {
+    var pr = [a.name, b.name];
+    pr.sort();
+    // assert(pr[0] != pr[1])
+    return (pr[0] == a.name?-1:1);
+};
+var name_order_DESC = function(a, b) {
+    return -name_order_ASC(a, b);
+};
+var name_order_RANDOM = function(a, b) {
+    return Math.random()-0.5;
+};
 /** (Constructor) Game(table:object, mode:object)
  *
  *  Create a game using given table ( contents of game )
@@ -37,15 +49,10 @@ var Game = function(table, mode) {
         if(table.hasOwnProperty(i))
             pts.push({name: i, value: table[i]});
     }
-    this.order_ASC_input(pts);
+    this.order_input(pts, name_order_RANDOM);
 };
-Game.prototype.order_ASC_input = function(arr, callback) {
-    arr.sort(function(a, b) {
-        var pr = [a.name, b.name];
-        pr.sort();
-        // assert(pr[0] != pr[1])
-        return (pr[0] == a.name?-1:1);
-    });
+Game.prototype.order_input = function(arr, order, callback) {
+    arr.sort(order);
     var th = this;
     var corrnum = 0;
     var results = [];
