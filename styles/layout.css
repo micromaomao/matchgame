@@ -7,3 +7,45 @@ body {
 .matchgame-wapper {
     margin: 0;
 }
+.answer-input-wrapper {
+    margin: 10% auto 0 auto;
+    text-align: center;
+    font-size: 3rem;
+    width: auto;
+}
+.answer-input {
+    font-size: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 8em;
+    border: none;
+    text-align: center;
+    background-color: transparent;
+    border-bottom: solid 0.2rem green;
+}
+.answer-input:focus {
+    border-bottom-color: rgba(0, 128, 0, 0.47);
+}
+.answer-input-name {
+    color: #222222;
+    margin: 1rem;
+}
+.howto {
+    font-size: 0.8rem;
+    color: #444444;
+    margin: 1rem;
+}
+.answer-input-btnok {
+    background-color: #3F863F;
+    border: #C3CEC3 0.15rem solid;
+    border-radius: 0.1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    font-size: 0.8em;
+}
+.answer-input-btnok-wrapper {
+    margin: 1rem;
+}

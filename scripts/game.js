@@ -29,6 +29,36 @@
 var Game = function(table, mode) {
     this.table = table;
     this.element = $('<div class="matchgame-wrapper"></div>');
+
+    // TODO: Read mode object.
+    this.mode = mode;
+    this.input("test");
+};
+Game.prototype.input = function(name, callback) {
+    var mpm = $('<div class="answer-input-wrapper"></div>');
+    this.element.append(mpm);
+    var nm = $('<div class="answer-input-name"></div>');
+    nm.text(name);
+    var ipt = $('<input type="text" placeholder="answer" class="answer-input">');
+    var btnok = $('<button class="answer-input-btnok">Check</buttom>');
+    mpm.append(nm);
+    mpm.append('<div class="howto">Input your answer below, or leave blank if you don\'t know. ' +
+               'On finish, press Enter or tap the "Check" buttom. </div>');
+    mpm.append(ipt);
+    mpm.append($('<div class="answer-input-btnok-wrapper"></div>').append(btnok));
+    var onok = function(){
+        callback(ipt.val());
+        mpm.remove();
+    };
+    btnok.on('click tap', onok);
+    ipt.on('keydown', function(evt){
+        if(evt.keyCode == 13) {
+            onok();
+        }
+    });
+    setTimeout(function(){
+        ipt[0].focus();
+    }, 20);
 };
 Game.prototype.appendTo = function(element) {
     (element.append?element.append(this.element):element.appendChild(this.element[0]));
