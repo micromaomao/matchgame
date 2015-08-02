@@ -1,14 +1,14 @@
-var name_order_ASC = function(a, b) {
-    var pr = [a.name, b.name];
-    pr.sort();
-    // assert(pr[0] != pr[1])
-    return (pr[0] == a.name?-1:1);
-};
-var name_order_DESC = function(a, b) {
-    return -name_order_ASC(a, b);
-};
-var name_order_RANDOM = function(a, b) {
-    return Math.random()-0.5;
+// Code from
+// http://bost.ocks.org/mike/shuffle/
+function shuffle(array) {
+  var m = array.length, t, i;
+  while (m) {
+    i = Math.floor(Math.random() * m--);
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+  }
+  return array;
 };
 /** (Constructor) Game(table:object, mode:object)
  *
@@ -32,8 +32,7 @@ var name_order_RANDOM = function(a, b) {
  *  * `selectlength`: When `"choose"` given to `answer`, this is the number of different
  *  answer showen. **Must be greater than 0**.
  *  * `way`: One of `"N-V"` - means name are given and player needs to answer the value,
- *  `"V-N"` is the reverse, and `"R"` means random, `"R80%V"` or `"R20%N"` means
- *  it has 80% chance to let user answer value.
+ *  `"V-N"` is the reverse.
  *  * `order`: `"ASC"` `"DESC"` or `"RANDOM"` ( default ).
  *  `}`
  */
@@ -42,20 +41,41 @@ var Game = function(table, mode) {
     this.table = table;
     this.element = $('<div class="matchgame-wrapper"></div>');
 
-    // TODO: Read mode object.
     this.mode = mode;
     var pts = [];
     for(var i in table) {
-        if(table.hasOwnProperty(i))
-            pts.push({name: i, value: table[i]});
+        if(table.hasOwnProperty(i)) {
+            if(mode.way == "V-N") {
+                pts.push({name: table[i], value: i});
+            } else {
+                pts.push({name: i, value: table[i]});
+            }
+        }
     }
     var th = this;
-    this.order_input(pts, name_order_RANDOM, function() {
+    switch(mode.order) {
+        case "ASC":
+            pts.sort(function(a, b) {
+                var pr = [a.name, b.name];
+                pr.sort();
+                // assert(pr[0] != pr[1])
+                return (pr[0] == a.name?-1:1);
+            });
+            break;
+        case "DESC":
+            pts.sort(function(a, b) {
+                return -name_order_ASC(a, b);
+            });
+            break;
+        case "RANDOM":
+        default:
+            shuffle(pts);
+    }
+    this.run(pts, function(){
         Game.prototype.showResults.apply(th, arguments);
-    });
+    }, (mode.answer=="choose"?(mode.selectlength||4):null));
 };
-Game.prototype.order_input = function(arr, order, callback) {
-    arr.sort(order);
+Game.prototype.run = function(arr, callback, opinum) {
     var th = this;
     var corrnum = 0;
     var results = [];
@@ -88,7 +108,24 @@ Game.prototype.order_input = function(arr, order, callback) {
             sm.find('.answer-count').text(i+1);
             sm.find('.answer-correct-num').text(corrnum);
             ds(i+1);
-        });
+        }, opinum?(function(){
+            var dsa = [];
+            for(var j = 0; j < arr.length; j ++) {
+                if(i == j) {
+                    continue;
+                }
+                dsa.push(j);
+            }
+            shuffle(dsa);
+            var pa = [];
+            for(var s = 0; s < opinum-1; s ++) {
+                if(s >= dsa.length) break;
+                pa.push(arr[dsa[s]].value);
+            }
+            pa.push(arr[i].value);
+            shuffle(pa);
+            return pa;
+        })():null);
     };
     ds(0);
 };
@@ -114,7 +151,7 @@ Game.prototype.showResults = function(corrnum, results) {
                          (r.iscorr?"yes":"no")+'</td></tr>');
     }
 };
-Game.prototype.input = function(name, callback) {
+Game.prototype.input = function(name, callback, opinions) {
     var mpm = $('<div class="answer-input-wrapper"></div>');
     this.element.append(mpm);
     var nm = $('<div class="answer-input-name"></div>');
@@ -122,23 +159,54 @@ Game.prototype.input = function(name, callback) {
     var ipt = $('<input type="text" placeholder="answer" class="answer-input">');
     var btnok = $('<button class="answer-input-btnok">Check</buttom>');
     mpm.append(nm);
-    mpm.append('<div class="howto">Input your answer below, or leave blank if you don\'t know. ' +
-               'On finish, press Enter or tap the "Check" buttom. </div>');
-    mpm.append(ipt);
-    mpm.append($('<div class="answer-input-btnok-wrapper"></div>').append(btnok));
+    if(!opinions) {
+        mpm.append('<div class="howto">Input your answer below, or leave blank if you don\'t know. ' +
+                   'On finish, press Enter or tap the "Check" buttom. </div>');
+        mpm.append(ipt);
+    } else {
+        mpm.append('<div class="howto">Select the correct answer or if you don\'t know, click next.'+
+                   ' Press 1-9 on keyboard to quick select.</div>');
+    }
     var onok = function(){
+        $(document).off('keydown');
         callback(ipt.val());
         mpm.remove();
     };
-    btnok.on('click tap', onok);
-    ipt.on('keydown', function(evt){
-        if(evt.keyCode == 13) {
-            onok();
+    if(!opinions) {
+        mpm.append($('<div class="answer-input-btnok-wrapper"></div>').append(btnok));
+        btnok.on('click tap', onok);
+        ipt.on('keydown', function(evt){
+            if(evt.keyCode == 13) {
+                onok();
+            }
+        });
+        setTimeout(function(){
+            ipt[0].focus();
+        }, 20);
+    } else {
+        opinions.push(null);
+        for(var i = 0; i < opinions.length; i ++) {
+            !function(i) {
+                var sel = $('<button class="opinion"></button>');
+                sel.text(opinions[i] || "Next");
+                if(i <= 8) {
+                    sel.prepend($('<span class="num"></span>').text(i+1));
+                }
+                mpm.append(sel);
+                sel.on('tap click', function() {
+                    ipt.val(opinions[i]);
+                    onok();
+                });
+            }(i);
         }
-    });
-    setTimeout(function(){
-        ipt[0].focus();
-    }, 20);
+        $(document).on('keydown', function(evt) {
+            var num = evt.keyCode - 48;
+            if(num >= 1 && num <= opinions.length) {
+                ipt.val(opinions[num-1]);
+                onok();
+            }
+        });
+    }
 };
 Game.prototype.appendTo = function(element) {
     (element.append?element.append(this.element):element.appendChild(this.element[0]));
@@ -162,6 +230,10 @@ $(document).ready(function(){
         "す": "su",
         "せ": "se",
         "そ": "so"
+    }, {
+        answer: "choose",
+        selectlength: 10,
+        way: "V-N"
     });
     testgame.appendTo($('body'));
 });
