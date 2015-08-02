@@ -58,3 +58,6 @@ body {
 .sm .answer-count, .sm .answer-correct-num {
     color: red;
 }
+.sm .answer-last {
+    font-size: 1.2rem;
+}

@@ -50,7 +50,8 @@ Game.prototype.order_ASC_input = function(arr, callback) {
     var corrnum = 0;
     var results = [];
     var sm = $('<div class="sm">You have answered <span class="answer-count">0</span>' +
-               ' problem, you got <span class="answer-correct-num">0</span> correct. <span class="answer-last"></span></div>');
+               ' problem, you got <span class="answer-correct-num">0</span> correct. <div class="answer-last"></div>' +
+               '<div class="answer-last-ctn"></div></div>');
     this.element.append(sm);
     var ds = function(i) {
         if(i >= arr.length) {
@@ -63,9 +64,11 @@ Game.prototype.order_ASC_input = function(arr, callback) {
                 results.push(true);
                 corrnum ++;
                 sm.find('.answer-last').text("You got the last one correct.");
+                sm.find('.answer-last-ctn').text("You inputed \"" + ans + "\", and the correct answer is this.");
             } else {
                 results.push(false);
                 sm.find('.answer-last').text("You got the last one wrong.");
+                sm.find('.answer-last-ctn').text("You inputed \"" + ans + "\", however the correct answer is \"" + arr[i].value + '".');
             }
             sm.find('.answer-count').text(i+1);
             sm.find('.answer-correct-num').text(corrnum);
