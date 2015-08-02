@@ -7,3 +7,85 @@ body {
 .matchgame-wapper {
     margin: 0;
 }
+.answer-input-wrapper {
+    margin: 10% auto 0 auto;
+    text-align: center;
+    font-size: 3rem;
+    width: auto;
+}
+.answer-input {
+    font-size: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 8em;
+    border: none;
+    text-align: center;
+    background-color: transparent;
+    border-bottom: solid 0.2rem green;
+}
+.answer-input:focus {
+    border-bottom-color: rgba(0, 128, 0, 0.47);
+}
+.answer-input-name {
+    color: #222222;
+    margin: 1rem;
+}
+.howto {
+    font-size: 0.8rem;
+    color: #444444;
+    margin: 1rem;
+}
+.answer-input-btnok {
+    background-color: #3F863F;
+    border: #C3CEC3 0.15rem solid;
+    border-radius: 0.1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    font-size: 0.8em;
+}
+.answer-input-btnok-wrapper {
+    margin: 1rem;
+}
+.sm {
+    font-size: 0.7rem;
+    color: #111111;
+    text-align: center;
+    margin: 1rem;
+}
+.sm .answer-count, .sm .answer-correct-num {
+    color: red;
+}
+.sm .answer-last {
+    font-size: 1.2rem;
+}
+
+.result {
+    margin: 1rem auto 1rem auto;
+    text-align: center;
+}
+.result-head {
+    background-color: #e0e0e0;
+    padding: 1rem;
+}
+.result-head .resres {
+    font-size: 2rem;
+}
+.result-head .resres .correct, .restable .result-true {
+    color: green;
+}
+.result-head .resres .wrong, .restable .result-false {
+    color: red;
+}
+.result-head .resres .final {
+    font-size: 1.6em;
+}
+.restable {
+    margin: 0;
+    padding: 1rem;
+    width: 100%;
+    text-align: center;
+    border: hidden;
+}
