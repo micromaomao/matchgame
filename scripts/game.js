@@ -143,7 +143,7 @@ Game.prototype.input = function(name, callback) {
 Game.prototype.appendTo = function(element) {
     (element.append?element.append(this.element):element.appendChild(this.element[0]));
 };
-
+// 
 $(document).ready(function(){
     document.title = "MatchGame Preview";
     var testgame = new Game({
@@ -151,7 +151,17 @@ $(document).ready(function(){
         "い": "i",
         "う": "u",
         "え": "e",
-        "お": "o"
+        "お": "o",
+        "か": "ka",
+        "き": "ki",
+        "く": "ku",
+        "け": "ke",
+        "こ": "ko",
+        "さ": "sa",
+        "し": "shi",
+        "す": "su",
+        "せ": "se",
+        "そ": "so"
     });
     testgame.appendTo($('body'));
 });
