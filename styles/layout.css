@@ -89,6 +89,12 @@ body {
     text-align: center;
     border: hidden;
 }
+.restable .wrong {
+    background-color: rgba(255, 0, 0, 0.3);
+}
+.restable tr:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
 .opinion {
     display: inline-block;
     margin: 1.2rem;
