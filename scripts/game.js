@@ -143,12 +143,15 @@ Game.prototype.showResults = function(corrnum, results) {
     var rlist = rlr.find('tbody');
     reshead.append(resres);
     resele.append(rlr);
-    rlist.append('<tr><td>Name</td><td>Correct Answer</td><td>Your input</td><td>If correct</td></tr>');
+    rlist.append($('<tr><td>Name</td><td>Correct Answer</td><td>Your input</td><td>If correct</td></tr>'));
     for(var i = 0; i < results.length; i ++) {
         var r = results[i];
-        rlist.append('<tr><td>' + r.name + '</td><td>' + r.corr
-                     + '</td><td>' + r.user + '</td><td class="result-' + r.iscorr.toString() +'">'+
-                         (r.iscorr?"yes":"no")+'</td></tr>');
+        rlist.append($('<tr><td class="name"></td><td class="corr">'
+                     + '</td><td class="user"></td><td class="result-' + (!!(r.iscorr)).toString() +'">'+
+                         (r.iscorr?"yes":"no")+'</td></tr>')
+                     .children('.name').text(r.name).parent()
+                     .children('.corr').text(r.corr).parent()
+                     .children('.user').text(r.user).parent());
     }
 };
 Game.prototype.input = function(name, callback, opinions) {
