@@ -236,6 +236,7 @@ $(document).ready(function(){
             "す": "su",
             "せ": "se",
             "そ": "so"
+            // ... Continue by yourself
         }, {});
         $('body').html('');
         g.appendTo($('body'));
