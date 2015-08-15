@@ -274,7 +274,21 @@ $(document).ready(function(){
             "わ": "wa",
             "を": "o",
             "ん": "n"
-        }, {});
+        }, {
+            /*
+             *  mode - A object defined below:
+             *
+             *  `{`  
+             *  * `answer`: One of `"input"` - means player will be asked to input the full answer,
+             *  `"choose"` - means user will be asked to choose the correct one from some answers.
+             *  * `selectlength`: When `"choose"` given to `answer`, this is the number of different
+             *  answer showen. **Must be greater than 0**.
+             *  * `way`: One of `"N-V"` - means name are given and player needs to answer the value,
+             *  `"V-N"` is the reverse.
+             *  * `order`: `"ASC"` `"DESC"` or `"RANDOM"` ( default ).
+             *  `}`
+             */
+        });
         $('body').html('');
         g.appendTo($('body'));
     }).toString() + "();");
