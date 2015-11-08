@@ -1,4 +1,4 @@
-var CardMatch = function(table) {
+var CardMatch = function(table, maxPair) {
     this.element = $('<div class="matchgame-wrapper"></div>')
     this.keyvals = [];
     for(var i in table) {
@@ -10,8 +10,8 @@ var CardMatch = function(table) {
     var th = this;
     this.numberClick = 0;
     function av(i) {
-        var end = th.nextTern(i, 15, function() {
-            if(!end) av(i + 15);
+        var end = th.nextTern(i, maxPair, function() {
+            if(!end) av(i + maxPair);
             else {
                 th.element.html("");
                 var time = $('<div class="answer-input-wrapper"></div>');
@@ -30,6 +30,7 @@ CardMatch.prototype.nextTern = function(start, maxPairs, callback) {
         aboutEnd = true;
     }
     if(amount <= 0) {
+        setTimeout(callback, 300);
         return true;
     }
     var end = start + amount;
