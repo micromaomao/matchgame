@@ -113,3 +113,17 @@ body {
     border: 1px solid #eee;
     height: auto;
 }
+
+.matchgame-wrapper .card {
+    display: inline-block;
+    margin: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #ffffff;
+    border: solid 1px #000;
+    font-size: 2rem;
+}
+.matchgame-wrapper .card span {
+    pointer-events: none;
+}
