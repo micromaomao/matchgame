@@ -280,6 +280,6 @@ $(document).ready(function(){
         document.title = "Match";
     }).toString() + "();");
     $('body').append($('<button class="answer-input-btnok">Start</button>').on('tap click', function(){
-        eval(localStorage.code);
+        eval(ce.getValue());
     }));
 });
