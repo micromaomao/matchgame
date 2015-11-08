@@ -226,7 +226,7 @@ $(document).ready(function(){
         mode: "javascript",
         matchBrackets: true
     });
-    ce.setValue(localStorage.code || "!" + (function(){
+    ce.setValue("!" + (function(){
         var g = new CardMatch({
             "あ": "a",
             "い": "i",
@@ -280,7 +280,6 @@ $(document).ready(function(){
         document.title = "Match";
     }).toString() + "();");
     $('body').append($('<button class="answer-input-btnok">Start</button>').on('tap click', function(){
-        localStorage.code = ce.getValue();
         eval(localStorage.code);
     }));
 });
