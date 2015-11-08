@@ -274,7 +274,7 @@ $(document).ready(function(){
             "わ": "wa",
             "を": "o",
             "ん": "n"
-        });
+        }, 15);
         $('body').html('');
         g.appendTo($('body'));
         document.title = "Match";
