@@ -8,15 +8,27 @@ var CardMatch = function(table) {
     }
     shuffle(this.keyvals);
     var th = this;
+    this.numberClick = 0;
     function av(i) {
         var end = th.nextTern(i, 15, function() {
             if(!end) av(i + 15);
+            else {
+                th.element.html("");
+                var time = $('<div class="answer-input-wrapper"></div>');
+                th.element.append(time);
+                time.text("Well done! You clicked " + th.numberClick + " times to finish this.")
+                th.element.animate({opacity: 1}, 300);
+            }
         });
     }
     av(0);
 };
 CardMatch.prototype.nextTern = function(start, maxPairs, callback) {
     var amount = Math.min(maxPairs, this.keyvals.length - start);
+    var aboutEnd = false;
+    if(this.keyvals.length <= amount) {
+        aboutEnd = true;
+    }
     if(amount <= 0) {
         return true;
     }
@@ -46,11 +58,13 @@ CardMatch.prototype.nextTern = function(start, maxPairs, callback) {
                 if(card.righted) {
                     return;
                 }
+                th.numberClick ++;
                 if(!last) {
                     last = card;
                     card.show();
                 } else {
                     if(card.id == last.id) {
+                        th.numberClick --;
                         return;
                     }
                     card.show();
@@ -82,6 +96,7 @@ CardMatch.prototype.nextTern = function(start, maxPairs, callback) {
     }
     th.element.css({opacity: 0});
     th.element.animate({opacity: 1}, 300);
+    return aboutEnd;
 };
 CardMatch.prototype.appendTo = function(element) {
     (element.append?element.append(this.element):element.appendChild(this.element[0]));
