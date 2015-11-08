@@ -282,4 +282,7 @@ $(document).ready(function(){
     $('body').append($('<button class="answer-input-btnok">Start</button>').on('tap click', function(){
         eval(ce.getValue());
     }));
+    setTimeout(function() {
+        $('body .answer-input-btnok').click();
+    }, 20);
 });
