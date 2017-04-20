@@ -40,13 +40,31 @@ CardMatch.prototype.nextTern = function(start, maxPairs, callback) {
         var fpid = 0;
         var cards = [];
         for(var i = start; i < end; i ++) {
+          (function (i, start, end) {
+            function findRights (isKey, search) {
+              var rights = []
+              for (var i = start; i < end; i ++) {
+                var kv = th.keyvals[i]
+                if (isKey) {
+                  if (kv.key === search) {
+                    rights.push(kv.val)
+                  }
+                } else {
+                  if (kv.val === search) {
+                    rights.push(kv.key)
+                  }
+                }
+              }
+              return rights
+            }
             var kv = th.keyvals[i];
-            var card = new Card(fpid, 1, kv.key, fpid+1);
+            var card = new Card(fpid, 1, kv.key, findRights(true, kv.key));
             cards.push(card);
             fpid++;
-            card = new Card(fpid, 0, kv.val, fpid-1);
+            card = new Card(fpid, 0, kv.val, findRights(false, kv.val));
             cards.push(card);
             fpid++;
+          })(i, start, end)
         }
         return cards;
     })();
@@ -70,7 +88,7 @@ CardMatch.prototype.nextTern = function(start, maxPairs, callback) {
                     }
                     card.show();
                     card.righted = last.righted = true;
-                    if(card.id == last.right) {
+                    if(last.rights.indexOf(card.content) >= 0) {
                         rightAmount ++;
                         card.element.unbind('click');
                         last.element.unbind('click');
@@ -102,11 +120,11 @@ CardMatch.prototype.nextTern = function(start, maxPairs, callback) {
 CardMatch.prototype.appendTo = function(element) {
     (element.append?element.append(this.element):element.appendChild(this.element[0]));
 };
-var Card = function(id, isKey, content, right) {
+var Card = function(id, isKey, content, rights) {
     this.id = id;
     this.isKey = isKey;
     this.content = content;
-    this.right = right;
+    this.rights = rights;
     this.element = $('<div class="card"></div>');
     this.text = $('<span></span>');
     this.text.text(this.content);
